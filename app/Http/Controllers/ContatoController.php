@@ -14,26 +14,7 @@ class ContatoController extends Controller
      */
     public function index()
     {
-        /*echo "<pre>";
-        $contatos = Contato::find(1);
-
-
-        foreach ($contatos->telefones as $telefone)
-        {
-            echo $telefone->tel_in_telefone;
-            echo "<br>";
-        }
-
-       //print_r($contatos->telefones);*/
-
-        echo "<pre>";
-
-        $contatos = Contato::listarTelefonesLeftContatos();
-
-        foreach ($contatos as $contato)
-        {
-            print_r($contato);
-        }
+       Contato::listarContatos();
     }
 
     /**
@@ -54,7 +35,12 @@ class ContatoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'con_st_nome'=>'required',
+            'con_st_email'=>'required',
+        ]);
+
+        Contato::salvarContato($request->all());
     }
 
     /**
@@ -88,7 +74,12 @@ class ContatoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'con_st_nome'=>'required',
+            'con_st_email'=>'required',
+        ]);
+
+        Contato::updateContato($request->all(),$id);
     }
 
     /**
@@ -99,6 +90,6 @@ class ContatoController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Contato::deleteContato($id);
     }
 }

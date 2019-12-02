@@ -15,7 +15,7 @@ class TbContato extends Migration
     {
         Schema::create('tb_contatos', function (Blueprint $table){
 
-            $table->increments('con_in_id');
+            $table->increments('con_in_id')->unsigned();
             $table->string('con_st_nome',200)->nullable();
             $table->string('con_st_email',200)->nullable()->unique();
 

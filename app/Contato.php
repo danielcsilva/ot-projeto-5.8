@@ -7,22 +7,11 @@ use Illuminate\Support\Facades\DB;
 
 class Contato extends Model
 {
-    protected $table = 'tb_contatos';
-
-    protected $primaryKey = 'con_in_id';
-
-    protected $fillable = ['con_st_nome', 'con_st_email'];
-
-    protected $guarded = ['deleted_at', 'updated_at', 'created_at'];
-
-    public function telefones(){
-        return $this->hasMany(Telefone::class,'con_in_id');
-    }
 
 
     public static function listarContatos()
     {
-        $query = DB::table('tb_contatos')->get();
+        $query = DB::table('tb_contatos')->orderBy('con_st_nome')->get();
 
         if(!empty($query))
         {
@@ -34,7 +23,7 @@ class Contato extends Model
 
     public static function nomeContatos()
     {
-        $query = DB::table('tb_contatos')->get('con_st_nome');
+        $query = DB::table('tb_contatos')->orderBy('con_st_nome')->get('con_st_nome');
 
 
         if(!empty($query))
@@ -99,6 +88,88 @@ class Contato extends Model
             return $query;
         }
         return false;
+    }
+
+
+    public static function salvarContato($dados)
+    {
+
+        if(!empty($dados) && is_array($dados))
+        {
+
+            try{
+                DB::beginTransaction();
+
+                $inset = DB::table('tb_contatos')->insert($dados);
+
+                DB::commit();
+
+                return  $inset;
+
+            }catch (\Exception $exception){
+
+                DB::rollBack();
+
+                throw new \Exception('cadastro não concluído ## problema('.$exception->getMessage().")");
+
+            }
+        }
+
+    }
+    public static function updateContato($dados,$idContato)
+    {
+
+        if(!empty($dados) && is_array($dados))
+        {
+
+            try{
+                DB::beginTransaction();
+
+                $inset = DB::table('tb_contatos')
+                    ->where('con_in_id',$idContato)
+                    ->update($dados);
+
+                DB::commit();
+
+                return  $inset;
+
+            }catch (\Exception $exception){
+
+                DB::rollBack();
+
+                throw new \Exception('cadastro não concluído ## problema('.$exception->getMessage().")");
+
+            }
+        }
+
+    }
+
+    public static function deleteContato($idContato)
+    {
+
+        if(!empty($idContato))
+        {
+
+            try{
+                DB::beginTransaction();
+
+                $inset = DB::table('tb_contatos')
+                    ->where('con_in_id',$idContato)
+                    ->delete();
+
+                DB::commit();
+
+                return  $inset;
+
+            }catch (\Exception $exception){
+
+                DB::rollBack();
+
+                throw new \Exception('cadastro não concluído ## problema('.$exception->getMessage().")");
+
+            }
+        }
+
     }
 
 
